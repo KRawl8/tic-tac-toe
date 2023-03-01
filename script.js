@@ -7,19 +7,48 @@ const Gameboard = (() => {
 
   const boardArea = document.querySelector(".gameboard");
 
-  board.forEach((square) => {});
+  board.forEach(() => {
+    const square = document.createElement("div");
+    square.addEventListener("click", (e) => {
+      if (e.currentTarget.textContent === "") {
+        Gameplay.changePlayer(e);
+      }
+    });
+    square.className = "square";
+    boardArea.appendChild(square);
+  });
 })();
 
-const newPlayer = (name, marker) => {
-  return { name, marker };
+const newPlayer = (name, token) => {
+  return { name, token };
 };
 
-const boardStyle = getComputedStyle(boardArea);
-const stringBoardSize = boardStyle.height;
-const boardSize = stringBoardSize.replace("px", "");
-const boardSectionSize = boardSize / 3;
-console.log(boardSectionSize);
+const Gameplay = (() => {
+  const playerOne = newPlayer("Player 1", "X");
+  const playerTwo = newPlayer("Player 2", "O");
 
-let boardSection = document.createElement("div");
-boardSection.style.height = boardSectionSize;
-boardSection.style.width = boardSectionSize;
+  let currentPlayerText = document.querySelector(".player-turn");
+  let currentPlayerToken = document.querySelector(".player-token");
+
+  let currentPlayer = playerOne;
+
+  let changePlayer = (e) => {
+    if (currentPlayer === playerOne) {
+      e.currentTarget.textContent = currentPlayer.token;
+      currentPlayer = playerTwo;
+      console.log(`${currentPlayer.name}'s Turn`);
+      currentPlayerText.textContent = `${currentPlayer.name}'s Turn`;
+      currentPlayerToken.textContent = currentPlayer.token;
+    } else if (currentPlayer === playerTwo) {
+      e.currentTarget.textContent = currentPlayer.token;
+      currentPlayer = playerOne;
+      console.log(`${currentPlayer.name}'s Turn`);
+      currentPlayerText.textContent = `${currentPlayer.name}'s Turn`;
+      currentPlayerToken.textContent = currentPlayer.token;
+    }
+  };
+
+  return {
+    changePlayer,
+  };
+})();
