@@ -2,21 +2,33 @@ const Gameboard = (() => {
   const board = [];
 
   for (let i = 0; i < 9; i++) {
-    board.push("");
+    board.push(i);
   }
 
   const boardArea = document.querySelector(".gameboard");
 
-  board.forEach(() => {
+  board.forEach((boardItem) => {
     const square = document.createElement("div");
+    square.dataset.index = boardItem;
     square.addEventListener("click", (e) => {
       if (e.currentTarget.textContent === "") {
+        boardItem = e.currentTarget.dataset.index;
+        board[boardItem] = Gameplay.currentPlayer.token;
+
+        console.log(Gameplay.currentPlayer);
+        console.log(board[boardItem]);
+        console.log(board);
         Gameplay.changePlayer(e);
+        // Gameplay.checkForWins();
       }
     });
     square.className = "square";
     boardArea.appendChild(square);
   });
+
+  return {
+    board,
+  };
 })();
 
 const newPlayer = (name, token) => {
@@ -35,12 +47,14 @@ const Gameplay = (() => {
   let changePlayer = (e) => {
     if (currentPlayer === playerOne) {
       e.currentTarget.textContent = currentPlayer.token;
+      //   console.log(currentPlayer);
       currentPlayer = playerTwo;
       console.log(`${currentPlayer.name}'s Turn`);
       currentPlayerText.textContent = `${currentPlayer.name}'s Turn`;
       currentPlayerToken.textContent = currentPlayer.token;
     } else if (currentPlayer === playerTwo) {
       e.currentTarget.textContent = currentPlayer.token;
+      //   console.log(currentPlayer);
       currentPlayer = playerOne;
       console.log(`${currentPlayer.name}'s Turn`);
       currentPlayerText.textContent = `${currentPlayer.name}'s Turn`;
@@ -48,7 +62,31 @@ const Gameplay = (() => {
     }
   };
 
+  const winConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+
+  let checkForWins = () => {
+    winConditions.forEach((winCon) => {
+      //   for (let i = 0; i < winCon.length; i++) {
+      //     console.log(Gameboard.board[winCon[i]].textContent);
+      //   }
+      //   winCon.forEach((index) => {
+      //     board[index].textContent
+      //   });
+    });
+  };
+
   return {
+    currentPlayer,
     changePlayer,
+    checkForWins,
   };
 })();
